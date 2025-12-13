@@ -1,29 +1,13 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
-    <title>Simple Sidebar - Start Bootstrap Template</title>
+{% extends 'entidades/base.html' %}
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="{% static 'assets/favicon.ico' %}" />
+{% block title %}Inicio | Sistema de Gestión{% endblock %}
 
-    <!-- Bootstrap (desde CDN) -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Tu archivo CSS local -->
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-</head>
-<body>
-    <!-- tu contenido igual -->
-    ...
-    <!-- Bootstrap core JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Tu script local -->
-    <script src="{% static 'js/scripts.js' %}"></script>
-</body>
-</html>
+{% block content %}
+<div class="container mt-4">
+    <h1 class="display-5 fw-bold text-primary mb-3">Bienvenido al Sistema de Gestión Logístico-Comercial</h1>
+    <p class="lead text-muted">Esta plataforma permite administrar clientes, productos, ventas y sucursales de manera centralizada. 
+        Desde el panel lateral podés navegar por cada sección, agregar nuevos registros o consultar los existentes.</p>
+    <hr>
+    <p>Comenzá explorando las opciones del menú lateral.</p>
+</div>
+{% endblock %}

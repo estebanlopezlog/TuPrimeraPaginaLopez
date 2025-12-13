@@ -1,0 +1,22 @@
+{% extends 'entidades/base.html' %}
+
+{% block title %}Clientes | Sistema de Gestión{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="display-5 fw-bold text-primary mb-3">Gestión de Clientes</h1>
+    <p class="lead text-muted">
+        Administrá la base de clientes de tu negocio. 
+        Podés registrar nuevos clientes, editar información existente o realizar búsquedas por DNI, nombre o localidad.
+    </p>
+    <hr>
+    <p>Usá los formularios disponibles para mantener la información de tus clientes siempre actualizada.</p>
+
+    <div class="mt-4">
+        <a href="{% url 'nuevo_cliente' %}" class="btn btn-success">
+            ➕ Crear nuevo cliente
+        </a>
+    </div>
+</div>
+{% endblock %}
+

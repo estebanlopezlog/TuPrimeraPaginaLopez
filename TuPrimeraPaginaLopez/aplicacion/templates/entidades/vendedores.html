@@ -1,0 +1,22 @@
+{% extends 'entidades/base.html' %}
+
+{% block title %}Vendedores | Sistema de Gestión{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="display-5 fw-bold text-danger mb-3">Gestión de Vendedores</h1>
+    <p class="lead text-muted">
+        Administrá el equipo de ventas de tu organización. 
+        Podés agregar nuevos vendedores, editar datos personales o eliminar registros inactivos.
+    </p>
+    <hr>
+    <p>Controlá el rendimiento de tus vendedores y asociá cada uno a las ventas registradas.</p>
+
+    <div class="mt-4">
+        <a href="{% url 'nuevo_vendedor' %}" class="btn btn-success">
+            ➕ Crear nuevo vendedor
+        </a>
+    </div>
+</div>
+{% endblock %}
+

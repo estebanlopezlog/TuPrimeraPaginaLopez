@@ -1,0 +1,63 @@
+{% extends 'entidades/base.html' %}
+
+{% block title %}Ventas | Sistema de Gestión{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="display-5 fw-bold text-success mb-3">📦 Registro de Ventas</h1>
+    <p class="lead text-muted">
+        En esta sección podés consultar las ventas registradas en el sistema. 
+        Cada registro muestra su cliente, vendedor, fecha y forma de pago.
+    </p>
+    <hr>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <a href="{% url 'crear_venta' %}" class="btn btn-success">➕ Generar nueva venta</a>
+    </div>
+
+    {% if ventas %}
+        <table class="table table-hover table-bordered align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Fecha</th>
+                    <th scope="col">Cliente</th>
+                    <th scope="col">Vendedor</th>
+                    <th scope="col">Sucursal</th>
+                    <th scope="col">Forma de pago</th>
+                    <th scope="col" class="text-end">Total ($)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for venta in ventas %}
+                <tr>
+                    <td>{{ venta.id_venta }}</td>
+                    <td>{{ venta.fecha_hora_venta|date:"d/m/Y H:i" }}</td>
+                    <td>{{ venta.cliente }}</td>
+                    <td>{{ venta.vendedor }}</td>
+                    <td>{{ venta.sucursal }}</td>
+                    <td>{{ venta.forma_de_pago }}</td>
+                    <td class="text-end fw-bold text-primary">
+                        {% with total=0 %}
+                            {% for detalle in venta.detalleventa_set.all %}
+                                {% with subtotal=detalle.cantidad_vendida|floatformat:0|add:"0" %}
+                                {% with total=total|add:detalle.precio_total %}{% endwith %}
+                                {% endwith %}
+                            {% endfor %}
+                            {{ total|floatformat:2 }}
+                        {% endwith %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-info mt-4" role="alert">
+            <strong>ℹ️ No hay ventas registradas todavía.</strong>  
+            Probá creando una nueva venta para comenzar a registrar movimientos.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+

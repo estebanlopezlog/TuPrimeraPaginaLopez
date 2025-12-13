@@ -1,0 +1,21 @@
+{% extends 'entidades/base.html' %}
+
+{% block title %}Productos | Sistema de Gestión{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="display-5 fw-bold text-success mb-3">Gestión de Productos</h1>
+    <p class="lead text-muted">
+        Desde esta sección podés consultar, agregar o modificar productos del catálogo. 
+        Cada producto incluye su nombre, precio unitario y proveedor asociado.
+    </p>
+    <hr>
+    <p>Seleccioná un producto o cargá uno nuevo para actualizar el inventario.</p>
+
+    <div class="mt-4">
+        <a href="{% url 'nuevo_producto' %}" class="btn btn-success">
+            ➕ Crear nuevo producto
+        </a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends 'entidades/base.html' %}
+
+{% block title %}Sucursales | Sistema de Gestión{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="display-5 fw-bold text-warning mb-3">Gestión de Sucursales</h1>
+    <p class="lead text-muted">
+        En esta sección se administran las sucursales disponibles del negocio. 
+        Podés agregar nuevas ubicaciones o modificar los nombres de las existentes.
+    </p>
+    <hr>
+    <p>Centralizá la gestión de tus puntos de venta desde un solo lugar.</p>
+
+    <div class="mt-4">
+        <a href="{% url 'nueva_sucursal' %}" class="btn btn-success">
+            ➕ Crear nueva sucursal
+        </a>
+    </div>
+</div>
+{% endblock %}
+

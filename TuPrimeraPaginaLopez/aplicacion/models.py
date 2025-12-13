@@ -62,11 +62,17 @@ class Venta(models.Model):
 
     producto = models.ManyToManyField(Producto, through='DetalleVenta')
 
-    forma_de_pago = models.CharField(max_length=50, choices=[
+    forma_de_pago = models.CharField(
+    max_length=50,
+    choices=[
         ('EFECTIVO', 'Efectivo'),
         ('TARJETA', 'Tarjeta'),
         ('TRANSFERENCIA', 'Transferencia')
-    ])
+    ],
+    blank=False,  #obligatorio
+    null=False
+)
+
 
     def __str__(self):
         return f"Venta #{self.id_venta} - {self.cliente.nombre_cliente} ({self.fecha_hora_venta.strftime('%d/%m/%Y')})"
