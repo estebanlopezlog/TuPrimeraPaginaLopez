@@ -4,18 +4,47 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h1 class="display-5 fw-bold text-success mb-3">Gestión de Productos</h1>
+    <h1 class="display-5 fw-bold text-success mb-3">🗃️ Gestión de Productos</h1>
     <p class="lead text-muted">
         Desde esta sección podés consultar, agregar o modificar productos del catálogo. 
         Cada producto incluye su nombre, precio unitario y proveedor asociado.
     </p>
     <hr>
-    <p>Seleccioná un producto o cargá uno nuevo para actualizar el inventario.</p>
 
-    <div class="mt-4">
-        <a href="{% url 'nuevo_producto' %}" class="btn btn-success">
-            ➕ Crear nuevo producto
-        </a>
+    <div class="mt-4 mb-3">
+        <a href="{% url 'nuevo_producto' %}" class="btn btn-success">➕ Crear nuevo producto</a>
     </div>
+
+    {% if productos %}
+        <table class="table table-hover table-bordered align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Nombre</th>
+                    <th>Precio unitario</th>
+                    <th>Proveedor</th>
+                    <th class="text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for producto in productos %}
+                    <tr>
+                        <td>{{ producto.id_producto }}</td>
+                        <td>{{ producto.nombre_producto }}</td>
+                        <td>${{ producto.precio_unitario|floatformat:2 }}</td>
+                        <td>{{ producto.proveedor }}</td>
+                        <td class="text-center">
+                            <a href="{% url 'editar_producto' producto.id_producto %}" class="btn btn-sm btn-warning me-1">✏️ Editar</a>
+                            <a href="{% url 'eliminar_producto' producto.id_producto %}" class="btn btn-sm btn-danger"
+                               onclick="return confirm('¿Seguro que querés eliminar este producto?');">🗑️ Eliminar</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-info mt-4">No hay productos cargados todavía.</div>
+    {% endif %}
 </div>
 {% endblock %}
+

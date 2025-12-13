@@ -4,19 +4,44 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h1 class="display-5 fw-bold text-warning mb-3">Gestión de Sucursales</h1>
+    <h1 class="display-5 fw-bold text-warning mb-3">🏠 Gestión de Sucursales</h1>
     <p class="lead text-muted">
         En esta sección se administran las sucursales disponibles del negocio. 
         Podés agregar nuevas ubicaciones o modificar los nombres de las existentes.
     </p>
     <hr>
-    <p>Centralizá la gestión de tus puntos de venta desde un solo lugar.</p>
 
-    <div class="mt-4">
-        <a href="{% url 'nueva_sucursal' %}" class="btn btn-success">
-            ➕ Crear nueva sucursal
-        </a>
+    <div class="mt-4 mb-3">
+        <a href="{% url 'nueva_sucursal' %}" class="btn btn-success">➕ Crear nueva sucursal</a>
     </div>
+
+    {% if sucursales %}
+        <table class="table table-hover table-bordered align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Nombre</th>
+                    <th class="text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sucursal in sucursales %}
+                    <tr>
+                        <td>{{ sucursal.id_sucursal }}</td>
+                        <td>{{ sucursal.nombre_sucursal }}</td>
+                        <td class="text-center">
+                            <a href="{% url 'editar_sucursal' sucursal.id_sucursal %}" class="btn btn-sm btn-warning me-1">✏️ Editar</a>
+                            <a href="{% url 'eliminar_sucursal' sucursal.id_sucursal %}" class="btn btn-sm btn-danger"
+                               onclick="return confirm('¿Seguro que querés eliminar esta sucursal?');">🗑️ Eliminar</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-info mt-4">No hay sucursales registradas todavía.</div>
+    {% endif %}
 </div>
 {% endblock %}
+
 

@@ -4,19 +4,45 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h1 class="display-5 fw-bold text-danger mb-3">Gestión de Vendedores</h1>
+    <h1 class="display-5 fw-bold text-danger mb-3">🙍🏻‍♂️ Gestión de Vendedores</h1>
     <p class="lead text-muted">
         Administrá el equipo de ventas de tu organización. 
         Podés agregar nuevos vendedores, editar datos personales o eliminar registros inactivos.
     </p>
     <hr>
-    <p>Controlá el rendimiento de tus vendedores y asociá cada uno a las ventas registradas.</p>
 
-    <div class="mt-4">
-        <a href="{% url 'nuevo_vendedor' %}" class="btn btn-success">
-            ➕ Crear nuevo vendedor
-        </a>
+    <div class="mt-4 mb-3">
+        <a href="{% url 'nuevo_vendedor' %}" class="btn btn-success">➕ Crear nuevo vendedor</a>
     </div>
+
+    {% if vendedores %}
+        <table class="table table-hover table-bordered align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th class="text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for vendedor in vendedores %}
+                    <tr>
+                        <td>{{ vendedor.id_vendedor }}</td>
+                        <td>{{ vendedor.nombre_vendedor }}</td>
+                        <td>{{ vendedor.apellido_vendedor }}</td>
+                        <td class="text-center">
+                            <a href="{% url 'editar_vendedor' vendedor.id_vendedor %}" class="btn btn-sm btn-warning me-1">✏️ Editar</a>
+                            <a href="{% url 'eliminar_vendedor' vendedor.id_vendedor %}" class="btn btn-sm btn-danger"
+                               onclick="return confirm('¿Seguro que querés eliminar este vendedor?');">🗑️ Eliminar</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-info mt-4">No hay vendedores registrados todavía.</div>
+    {% endif %}
 </div>
 {% endblock %}
 
