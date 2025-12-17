@@ -40,8 +40,24 @@
                     <div class="container-fluid">
                         <button class="btn btn-primary" id="sidebarToggle">Menú</button>
                         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                            <ul class="navbar-nav ms-auto mt-2 mt-lg-0">
-                                <a class="nav-link" href="{% url 'quien_soy' %}">¿Quién soy?</a>
+                            <ul class="navbar-nav ms-auto mt-2 mt-lg-0 align-items-center">
+                                {% if user.is_authenticated %}
+                                    <li class="nav-item me-3">
+                                        <span class="navbar-text text-dark fw-semibold">
+                                            👤 Usuario: <span class="text-primary">{{ user.username }}</span>
+                                        </span>
+                                    </li>
+                                {% endif %}
+                                <li class="nav-item me-3">
+                                    <a class="nav-link text-secondary" href="{% url 'quien_soy' %}">
+                                        ¿Quién soy?
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="btn btn-outline-danger btn-sm shadow-sm" href="{% url 'logout' %}">
+                                        🔒 Cerrar sesión
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                     </div>

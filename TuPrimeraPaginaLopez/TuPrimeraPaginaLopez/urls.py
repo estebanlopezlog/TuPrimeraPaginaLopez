@@ -24,3 +24,5 @@ urlpatterns = [
     path('', include('aplicacion.urls')),
 ]
 
+# Mensaje dustomizado para error 403 (Error de acceso por no contar con permisos)
+handler403 = 'aplicacion.views.error_403_view'
