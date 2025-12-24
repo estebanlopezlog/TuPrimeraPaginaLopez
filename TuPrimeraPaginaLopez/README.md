@@ -3,7 +3,7 @@
 <h1 align="center">🧠 Sistema de Gestión Logístico-Comercial</h1>
 <p align="center">
   <strong>Proyecto Final - Python & Django (Coderhouse 2025)</strong><br>
-  Desarrollado por <a href="https://www.linkedin.com/in/estebanlopezlog" target="_blank">Esteban López</a>  
+  Desarrollado por <a href="https://sites.google.com/view/estebanlopezpro/de-datos-a-decisiones?authuser=0" target="_blank">Esteban López</a>  
 </p>
 
 ---
@@ -40,6 +40,27 @@ cd TuPrimeraPaginaLopez
 ### 📦 2️⃣ Instalar dependencias
 > pip install -r requirements.txt
 
+🧾 Dependencias
+>- asgiref==3.11.0
+>- Django==5.2.8
+>- django-select2==8.4.3
+>- pandas==2.3.3
+>- numpy==2.3.5
+>- matplotlib==3.10.7
+>- Pillow==12.0.0
+>- sqlparse==0.5.3
+>- tzdata==2025.2
+>- python-dateutil==2.9.0.post0
+>- kiwisolver==1.4.9
+>- pyparsing==3.2.5
+>- fonttools==4.60.1
+>- packaging==25.0
+>- charset-normalizer==3.4.4
+>- idna==3.11
+>- urllib3==2.5.0
+>- six==1.17.0
+>- requests==2.32.3
+
 ### 🚀 3️⃣ Ejecutar el servidor
 > python manage.py runserver
 > Luego, ingresar a 👉 http://127.0.0.1:8000/
@@ -72,27 +93,6 @@ Rol	Usuario	Contraseña	Permisos
 - 📉 Tendencias de negocio
 
 Todos los gráficos se actualizan automáticamente según el período seleccionado.
-
-🧾 Dependencias
->- asgiref==3.11.0
->- Django==5.2.8
->- django-select2==8.4.3
->- pandas==2.3.3
->- numpy==2.3.5
->- matplotlib==3.10.7
->- Pillow==12.0.0
->- sqlparse==0.5.3
->- tzdata==2025.2
->- python-dateutil==2.9.0.post0
->- kiwisolver==1.4.9
->- pyparsing==3.2.5
->- fonttools==4.60.1
->- packaging==25.0
->- charset-normalizer==3.4.4
->- idna==3.11
->- urllib3==2.5.0
->- six==1.17.0
->- requests==2.32.3
 
 
 👨‍💻 Autor
