@@ -8,7 +8,9 @@ from .forms import (
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib import messages
-
+from django.contrib.auth.models import User
+from django.db import IntegrityError
+from .models import UserProfile
 
 
 # 🌐 PÁGINAS PRINCIPALES
@@ -16,11 +18,25 @@ from django.contrib import messages
 def index(request):
     return render(request, 'entidades/index.html')
 
+##@login_required(login_url='login')
+##@permission_required('aplicacion.view_producto', raise_exception=True)
+##def productos(request):
+##    productos = Producto.objects.all()
+##    return render(request, 'entidades/productos.html', {'productos': productos})
+
 @login_required(login_url='login')
 @permission_required('aplicacion.view_producto', raise_exception=True)
 def productos(request):
-    productos = Producto.objects.all()
-    return render(request, 'entidades/productos.html', {'productos': productos})
+    query = request.GET.get('q', '')  # Captura el texto del filtro
+    if query:
+        productos = Producto.objects.filter(nombre_producto__icontains=query)
+    else:
+        productos = Producto.objects.all()
+
+    return render(request, 'entidades/productos.html', {
+        'productos': productos,
+        'query': query
+    })
 
 
 @login_required(login_url='login')
@@ -252,3 +268,143 @@ def logout_view(request):
 def error_403_view(request, exception=None):
     return render(request, 'entidades/403.html', status=403)
 
+
+
+# REGISTRO DE NUEVOS USUARIOS
+def register_view(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        first_name = request.POST['first_name']
+        last_name = request.POST['last_name']
+        email = request.POST['email']
+        password1 = request.POST['password1']
+        password2 = request.POST['password2']
+        profile_picture = request.FILES.get('profile_picture')
+
+        if password1 != password2:
+            messages.error(request, "Las contraseñas no coinciden.")
+            return render(request, 'entidades/register.html')
+
+        if len(password1) < 8 or password1.isdigit() or password1.lower() in ['password', 'contraseña', '12345678']:
+            messages.error(request, "La contraseña no cumple los requisitos de seguridad.")
+            return render(request, 'entidades/register.html')
+
+        try:
+            user = User.objects.create_user(
+                username=username,
+                password=password1,
+                first_name=first_name,
+                last_name=last_name,
+                email=email
+            )
+            user.save()
+
+            # Crear el perfil y asociar la imagen
+            profile = UserProfile(user=user)
+            if profile_picture:
+                profile.profile_picture = profile_picture
+            profile.save()
+
+            messages.success(request, "Usuario registrado exitosamente. Ahora podés iniciar sesión.")
+            return redirect('login')
+        except IntegrityError:
+            messages.error(request, "El nombre de usuario ya existe. Elegí otro.")
+            return render(request, 'entidades/register.html')
+
+    return render(request, 'entidades/register.html')
+
+
+# Para editar el perfil de usuario
+@login_required(login_url='login')
+def editar_perfil(request):
+    user = request.user
+    perfil, creado = UserProfile.objects.get_or_create(user=user)
+
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        email = request.POST.get('email')
+        profile_picture = request.FILES.get('profile_picture')
+
+        # Actualizar datos del usuario
+        user.username = username
+        user.first_name = first_name
+        user.last_name = last_name
+        user.email = email
+        user.save()
+
+        # Actualizar imagen de perfil
+        if profile_picture:
+            perfil.profile_picture = profile_picture
+        perfil.save()
+
+        messages.success(request, "✅ Perfil actualizado correctamente.")
+        return redirect('index')
+
+    context = {'user': user, 'perfil': perfil}
+    return render(request, 'entidades/editar_perfil.html', context)
+
+## Vista adicional - DASHBOARD
+
+from django.db.models import Sum, Count
+from django.utils.dateparse import parse_date
+from datetime import date
+import pandas as pd
+
+@login_required(login_url='login')
+def dashboard(request):
+    # Captura de filtros
+    fecha_inicio = request.GET.get('fecha_inicio')
+    fecha_fin = request.GET.get('fecha_fin')
+
+    # Definir rango por defecto (últimos 30 días)
+    if not fecha_inicio or not fecha_fin:
+        fecha_fin = date.today()
+        fecha_inicio = fecha_fin.replace(day=1)
+
+    # Convertir a tipo fecha
+    fecha_inicio = parse_date(str(fecha_inicio))
+    fecha_fin = parse_date(str(fecha_fin))
+
+    # Filtrar ventas en el rango
+    ventas = Venta.objects.filter(fecha_hora_venta__date__range=[fecha_inicio, fecha_fin])
+
+    # 1️⃣ Clientes nuevos por día
+    clientes_por_dia = (
+        Cliente.objects.filter(fecha_alta__range=[fecha_inicio, fecha_fin])
+        .values('fecha_alta')
+        .annotate(total=Count('id_cliente'))
+        .order_by('fecha_alta')
+    )
+
+    # 2️⃣ Total de ventas
+    total_ventas = ventas.count()
+
+    # 3️⃣ Total vendido (solo tarjetas)
+    total_tarjeta = ventas.filter(forma_de_pago='TARJETA').aggregate(total=Sum('detalleventa__precio_total'))['total'] or 0
+
+    # 4️⃣ Top vendedores
+    top_vendedores = (
+        ventas.values('vendedor__nombre_vendedor', 'vendedor__apellido_vendedor')
+        .annotate(total=Sum('detalleventa__precio_total'))
+        .order_by('-total')[:5]
+    )
+
+    # 5️⃣ Distribución por forma de pago
+    ventas_por_pago = (
+        ventas.values('forma_de_pago')
+        .annotate(total=Sum('detalleventa__precio_total'))
+    )
+
+    context = {
+        'fecha_inicio': fecha_inicio,
+        'fecha_fin': fecha_fin,
+        'clientes_por_dia': clientes_por_dia,
+        'total_ventas': total_ventas,
+        'total_tarjeta': total_tarjeta,
+        'top_vendedores': top_vendedores,
+        'ventas_por_pago': ventas_por_pago,
+    }
+
+    return render(request, 'entidades/dashboard.html', context)

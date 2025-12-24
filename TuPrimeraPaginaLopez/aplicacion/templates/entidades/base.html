@@ -21,50 +21,59 @@
     <body>
         <div class="d-flex" id="wrapper">
             <!-- Sidebar -->
-            <div class="border-end bg-white" id="sidebar-wrapper">
+            <div class="border-end bg-white" id="sidebar-wrapper" style="margin-top: 56px;">
                 <div class="sidebar-heading border-bottom bg-light">Panel de Control</div>
-                <div class="list-group list-group-flush">
-                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="{% url 'index' %}">Inicio</a>
-                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="{% url 'productos' %}">Productos</a>
-                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="{% url 'clientes' %}">Clientes</a>
-                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="{% url 'sucursales' %}">Sucursales</a>
-                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="{% url 'vendedores' %}">Vendedores</a>
-                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="{% url 'ventas' %}">Ventas</a>
-                </div>
+                    <div class="list-group list-group-flush">
+                        <a class="list-group-item list-group-item-action p-3" href="{% url 'index' %}">Inicio</a>
+                        <a class="list-group-item list-group-item-action p-3" href="{% url 'productos' %}">01. Productos</a>
+                        <a class="list-group-item list-group-item-action p-3" href="{% url 'clientes' %}">02. Clientes</a>
+                        <a class="list-group-item list-group-item-action p-3" href="{% url 'sucursales' %}">03. Sucursales</a>
+                        <a class="list-group-item list-group-item-action p-3" href="{% url 'vendedores' %}">04. Vendedores</a>
+                        <a class="list-group-item list-group-item-action p-3" href="{% url 'ventas' %}">05. Ventas</a>
+                        <a class="list-group-item list-group-item-action p-3" href="{% url 'dashboard' %}">06. Dashboard</a>
+                    </div>
+
             </div>
 
             <!-- Page content wrapper -->
             <div id="page-content-wrapper">
+
                 <!-- Top navigation -->
-                <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom shadow-sm">
+                <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom shadow-sm fixed-top" style="z-index: 1030;">
                     <div class="container-fluid">
                         <button class="btn btn-primary" id="sidebarToggle">Menú</button>
+
                         <div class="collapse navbar-collapse" id="navbarSupportedContent">
                             <ul class="navbar-nav ms-auto mt-2 mt-lg-0 align-items-center">
+                                
+                                <!-- Miniatura y nombre del usuario -->
                                 {% if user.is_authenticated %}
-                                    <li class="nav-item me-3">
-                                        <span class="navbar-text text-dark fw-semibold">
-                                            👤 Usuario: <span class="text-primary">{{ user.username }}</span>
-                                        </span>
-                                    </li>
+                                <li class="nav-item d-flex align-items-center me-3">
+                                    <img src="{{ user.userprofile.profile_picture.url }}" 
+                                        onerror="this.src='/media/profile_pics/default.jpg'"
+                                        alt="Foto de perfil"
+                                        class="rounded-circle me-2"
+                                        style="width: 35px; height: 35px; object-fit: cover; border: 1px solid #ddd;">
+                                    <span class="fw-semibold">
+                                        <span class="text-primary">{{ user.first_name }}</span>
+                                        <span class="text-primary">{{ user.last_name }}</span>
+                                    </span>
+                                </li>
                                 {% endif %}
-                                <li class="nav-item me-3">
-                                    <a class="nav-link text-secondary" href="{% url 'quien_soy' %}">
-                                        ¿Quién soy?
-                                    </a>
-                                </li>
                                 <li class="nav-item">
-                                    <a class="btn btn-outline-danger btn-sm shadow-sm" href="{% url 'logout' %}">
-                                        🔒 Cerrar sesión
-                                    </a>
+                                    <a class="nav-link" href="{% url 'editar_perfil' %}">✏️ Editar perfil</a>
                                 </li>
+
+                                <!-- Enlaces adicionales  -->
+                                <li class="nav-item"><a class="nav-link" href="{% url 'quien_soy' %}">Acerca de mi</a></li>
+                                <li class="nav-item"><a class="btn btn-outline-danger ms-1" href="{% url 'logout' %}">🔒 Cerrar sesión</a></li>
                             </ul>
                         </div>
                     </div>
                 </nav>
 
                 <!-- Main content -->
-                <main class="container-fluid py-4">
+                <main class="container-fluid py-4" style="margin-top: 80px;">
                     {% block content %}
                     {% endblock %}
                 </main>

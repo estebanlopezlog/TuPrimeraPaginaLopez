@@ -22,7 +22,10 @@
             <label>Sucursal:</label>
             {{ form.sucursal }}
         </div>
-
+        <div class="mb-3">
+            <label>Forma de pago:</label>
+            {{ form.forma_de_pago }}
+        </div>
         <hr>
         <h5>Productos y cantidades</h5>
         {{ formset.management_form }}
@@ -33,10 +36,7 @@
         {% endfor %}
         <hr>
 
-        <div class="mb-3">
-            <label>Forma de pago:</label>
-            {{ form.forma_de_pago }}
-        </div>
+
 
         <button type="submit" class="btn btn-success">💾 Guardar Venta</button>
         <a href="{% url 'ventas' %}" class="btn btn-secondary">Cancelar</a>

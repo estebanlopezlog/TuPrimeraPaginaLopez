@@ -7,16 +7,26 @@
     <h1 class="display-5 fw-bold text-success mb-3">📦 Registro de Ventas</h1>
     <p class="lead text-muted">
         En esta sección podés consultar las ventas registradas en el sistema. 
-        Cada registro muestra su cliente, vendedor, fecha y forma de pago.
+        Cada registro muestra su cliente, vendedor, sucursal, fecha y forma de pago.
     </p>
     <hr>
 
+
     <div class="d-flex justify-content-between align-items-center mb-3">
         <a href="{% url 'crear_venta' %}" class="btn btn-success">➕ Generar nueva venta</a>
+
+        <!-- Buscador dinámico -->
+        <div class="d-flex ms-3" style="max-width: 350px;">
+            <input type="text" id="searchInput"
+                   class="form-control me-2"
+                   placeholder="Buscar venta..."
+                   autocomplete="off">
+            <button type="button" id="clearButton" class="btn btn-outline-secondary">✖</button>
+        </div>
     </div>
 
     {% if datos_ventas %}
-        <table class="table table-hover table-bordered align-middle mt-3">
+        <table class="table table-hover table-bordered align-middle mt-3" id="ventaTable">
             <thead class="table-light">
                 <tr>
                     <th>#</th>
@@ -59,4 +69,37 @@
         </div>
     {% endif %}
 </div>
+
+<!--  Filtro dinámico -->
+<script>
+const searchInput = document.getElementById('searchInput');
+const clearButton = document.getElementById('clearButton');
+const rows = document.querySelectorAll('#ventaTable tbody tr');
+
+
+searchInput.addEventListener('input', function() {
+    const filter = this.value.toLowerCase().trim();
+
+    rows.forEach(row => {
+        const cliente = row.cells[2].innerText.toLowerCase();
+        const vendedor = row.cells[3].innerText.toLowerCase();
+        const sucursal = row.cells[4].innerText.toLowerCase();
+        const pago = row.cells[5].innerText.toLowerCase();
+
+        row.style.display =
+            (cliente.includes(filter) || vendedor.includes(filter) || sucursal.includes(filter) || pago.includes(filter))
+            ? '' : 'none';
+    });
+
+    if (filter === '') rows.forEach(row => row.style.display = '');
+});
+
+
+clearButton.addEventListener('click', function() {
+    searchInput.value = '';
+    rows.forEach(row => row.style.display = '');
+    searchInput.focus();
+});
+</script>
 {% endblock %}
+

@@ -1,11 +1,15 @@
 from django.urls import path
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
-    # 🔐 AUTENTICACIÓN
+    # 🔐 AUTENTICACIÓN Y ACCESO
     path('', views.login_view, name='login'),
-    path('logout/', views.logout_view, name='logout'), 
-    path('inicio/', views.index, name='index'), 
+    path('logout/', views.logout_view, name='logout'),
+    path('register/', views.register_view, name='register'),
+    path('inicio/', views.index, name='index'),
 
     # 📦 MÓDULOS PRINCIPALES
     path('productos/', views.productos, name='productos'),
@@ -41,4 +45,35 @@ urlpatterns = [
     # ✏️ ACCIONES - VENTAS
     path('ventas/editar/<int:id_venta>/', views.editar_venta, name='editar_venta'),
     path('ventas/eliminar/<int:id_venta>/', views.eliminar_venta, name='eliminar_venta'),
+
+
+    # URL para ir a editar el perfil
+    path('editar_perfil/', views.editar_perfil, name='editar_perfil'),
+
+
+    path(
+        'password_change/',
+        auth_views.PasswordChangeView.as_view(
+            template_name='entidades/password_change.html',
+            success_url='/password_change_done/'
+        ),
+        name='password_change'
+    ),
+    path(
+        'password_change_done/',
+        auth_views.PasswordChangeDoneView.as_view(
+            template_name='entidades/password_change_done.html'
+        ),
+        name='password_change_done'
+    ),
+
+    path('dashboard/', views.dashboard, name='dashboard'),
+
+
 ]
+
+
+
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
