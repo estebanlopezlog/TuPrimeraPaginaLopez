@@ -1,0 +1,1 @@
+web: gunicorn TuPrimeraPaginaLopez.wsgi:application
