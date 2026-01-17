@@ -1,0 +1,35 @@
+# Core
+Django==5.2.8
+gunicorn==22.0.0
+
+# Django extras
+django-select2==8.4.3
+
+# Data / análisis
+pandas==2.3.3
+numpy==2.3.5
+matplotlib==3.10.7
+
+# Images
+Pillow==12.0.0
+
+# Django dependencies
+asgiref==3.11.0
+sqlparse==0.5.3
+tzdata==2025.2
+
+# Python utils
+python-dateutil==2.9.0.post0
+six==1.17.0
+
+# Requests stack
+requests==2.32.3
+urllib3==2.5.0
+charset-normalizer==3.4.4
+idna==3.11
+
+# Plot dependencies
+kiwisolver==1.4.9
+pyparsing==3.2.5
+fonttools==4.60.1
+packaging==25.0
