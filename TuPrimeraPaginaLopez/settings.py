@@ -1,37 +1,31 @@
-import os
 from pathlib import Path
+import os
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+SECRET_KEY = os.environ.get(
+    "SECRET_KEY",
+    "unsafe-dev-secret-key"
+)
 
-# ======================
-# SECURITY
-# ======================
+DEBUG = os.getenv("DEBUG", "False") == "True"
 
-# SECRET_KEY desde variable de entorno (Render)
-# Fallback solo para desarrollo local
-SECRET_KEY = os.environ.get("SECRET_KEY", "unsafe-secret-key")
-
-# DEBUG controlado por entorno
-DEBUG = os.environ.get("DEBUG") == "True"
-
-# Render necesita ALLOWED_HOSTS habilitado
-ALLOWED_HOSTS = ["*"]
-
-
-# ======================
-# APPLICATION DEFINITION
-# ======================
+ALLOWED_HOSTS = [
+    "template-gestion-de-negocio.onrender.com",
+    ".onrender.com",
+    "localhost",
+    "127.0.0.1",
+]
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'blog',  # tu app
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+
+    "aplicacion",  # ← OBLIGATORIO
 ]
 
 MIDDLEWARE = [
@@ -53,6 +47,7 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
@@ -63,11 +58,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'TuPrimeraPaginaLopez.wsgi.application'
 
-
-# ======================
-# DATABASE
-# ======================
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -75,47 +65,13 @@ DATABASES = {
     }
 }
 
-
-# ======================
-# PASSWORD VALIDATION
-# ======================
-
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
-
-
-# ======================
-# INTERNATIONALIZATION
-# ======================
-
-LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
+LANGUAGE_CODE = 'es-ar'
+TIME_ZONE = 'America/Argentina/Buenos_Aires'
 USE_I18N = True
 USE_TZ = True
 
-
-# ======================
-# STATIC FILES
-# ======================
-
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-
-# ======================
-# DEFAULTS
-# ======================
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
