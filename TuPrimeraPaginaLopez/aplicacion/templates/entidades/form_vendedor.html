@@ -1,0 +1,14 @@
+{% extends 'entidades/base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-primary">Registrar Nuevo Vendedor</h2>
+    <p>Complete los datos del vendedor que formará parte del equipo comercial.</p>
+
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success mt-3">Guardar Vendedor</button>
+        <a href="{% url 'vendedores' %}" class="btn btn-secondary mt-3">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

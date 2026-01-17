@@ -1,0 +1,93 @@
+{% extends 'entidades/base.html' %}
+
+{% block title %}Productos | Sistema de Gestión{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="display-5 fw-bold text-success mb-3">🗃️ Gestión de Productos</h1>
+    <p class="lead text-muted">
+        Desde esta sección podés consultar, agregar o modificar productos del catálogo. 
+        Cada producto incluye su nombre, precio unitario y proveedor asociado.
+    </p>
+    <hr>
+
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <a href="{% url 'nuevo_producto' %}" class="btn btn-success">➕ Crear nuevo producto</a>
+
+    <!-- Buscador dinámico -->
+    <div class="d-flex ms-3" style="max-width: 300px;">
+        <input type="text" id="searchInput"
+            class="form-control me-2"
+            placeholder="Buscar producto..."
+            autocomplete="off">
+        <button type="button" id="clearButton" class="btn btn-outline-secondary">✖</button>
+    </div>
+
+</div>
+
+{% if productos %}
+    <table class="table table-hover table-bordered align-middle mt-3" id="productTable">
+        <thead class="table-light">
+            <tr>
+                <th>#</th>
+                <th>Nombre</th>
+                <th>Precio unitario</th>
+                <th>Proveedor</th>
+                <th class="text-center">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for producto in productos %}
+                <tr>
+                    <td>{{ producto.id_producto }}</td>
+                    <td>{{ producto.nombre_producto }}</td>
+                    <td>${{ producto.precio_unitario|floatformat:2 }}</td>
+                    <td>{{ producto.proveedor }}</td>
+                    <td class="text-center">
+                        <a href="{% url 'editar_producto' producto.id_producto %}" class="btn btn-sm btn-warning me-1">✏️ Editar</a>
+                        <a href="{% url 'eliminar_producto' producto.id_producto %}" class="btn btn-sm btn-danger"
+                           onclick="return confirm('¿Seguro que querés eliminar este producto?');">🗑️ Eliminar</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <div class="alert alert-info mt-4">No hay productos cargados todavía.</div>
+{% endif %}
+
+<!--  FiltroDinamico -->
+<script>
+const searchInput = document.getElementById('searchInput');
+const clearButton = document.getElementById('clearButton');
+const rows = document.querySelectorAll('#productTable tbody tr');
+
+searchInput.addEventListener('input', function() {
+    const filter = this.value.toLowerCase().trim();
+
+    rows.forEach(row => {
+        const name = row.cells[1].innerText.toLowerCase();
+        const provider = row.cells[3].innerText.toLowerCase(); // también busca por proveedor
+        // Muestra las filas que contengan la coincidencia
+        row.style.display = (name.includes(filter) || provider.includes(filter)) ? '' : 'none';
+    });
+
+    // Si el campo está vacío, mostrar todo
+    if (filter === '') {
+        rows.forEach(row => row.style.display = '');
+    }
+});
+
+clearButton.addEventListener('click', function() {
+    searchInput.value = '';
+    rows.forEach(row => row.style.display = '');
+    searchInput.focus();
+});
+</script>
+</div>
+{% endblock %}
+
+
+  
+

@@ -1,0 +1,11 @@
+{% extends 'entidades/base.html' %}
+
+{% block title %}Acceso denegado{% endblock %}
+
+{% block content %}
+<div class="container text-center mt-5">
+    <h1 class="display-5 fw-bold text-danger mb-3">🚫 Acceso Denegado</h1>
+    <p class="lead text-muted">No tenés permisos para acceder a esta sección o realizar esta acción.</p>
+    <a href="{% url 'index' %}" class="btn btn-outline-primary mt-3">⬅️ Volver al panel principal</a>
+</div>
+{% endblock %}
