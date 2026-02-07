@@ -1,0 +1,96 @@
+{% extends 'entidades/base.html' %}
+
+{% block title %}Clientes | Sistema de Gestión{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="display-5 fw-bold text-primary mb-3">🚻 Gestión de Clientes</h1>
+    <p class="lead text-muted">
+        Administrá la base de clientes de tu negocio. 
+        Podés registrar nuevos clientes, editar información existente o realizar búsquedas por DNI, nombre o localidad.
+    </p>
+    <hr>
+
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <a href="{% url 'nuevo_cliente' %}" class="btn btn-success">➕ Crear nuevo cliente</a>
+
+        <!-- Buscador dinámico -->
+        <div class="d-flex ms-3" style="max-width: 350px;">
+            <input type="text" id="searchInput"
+                   class="form-control me-2"
+                   placeholder="Buscar cliente..."
+                   autocomplete="off">
+            <button type="button" id="clearButton" class="btn btn-outline-secondary">✖</button>
+        </div>
+    </div>
+
+    {% if clientes %}
+        <table class="table table-hover table-bordered align-middle mt-3" id="clienteTable">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>DNI</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Localidad</th>
+                    <th>Fecha alta</th>
+                    <th class="text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cliente in clientes %}
+                    <tr>
+                        <td>{{ cliente.id_cliente }}</td>
+                        <td>{{ cliente.dni }}</td>
+                        <td>{{ cliente.nombre_cliente }}</td>
+                        <td>{{ cliente.apellido_cliente }}</td>
+                        <td>{{ cliente.localidad }}</td>
+                        <td>{{ cliente.fecha_alta|date:"d/m/Y" }}</td>
+                        <td class="text-center">
+                            <a href="{% url 'editar_cliente' cliente.id_cliente %}" class="btn btn-sm btn-warning me-1">✏️ Editar</a>
+                            <a href="{% url 'eliminar_cliente' cliente.id_cliente %}" class="btn btn-sm btn-danger"
+                               onclick="return confirm('¿Seguro que querés eliminar este cliente?');">🗑️ Eliminar</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-info mt-4">No hay clientes registrados todavía.</div>
+    {% endif %}
+</div>
+
+<!--  Filtro dinámico -->
+<script>
+const searchInput = document.getElementById('searchInput');
+const clearButton = document.getElementById('clearButton');
+const rows = document.querySelectorAll('#clienteTable tbody tr');
+
+
+searchInput.addEventListener('input', function() {
+    const filter = this.value.toLowerCase().trim();
+
+    rows.forEach(row => {
+        const dni = row.cells[1].innerText.toLowerCase();
+        const nombre = row.cells[2].innerText.toLowerCase();
+        const apellido = row.cells[3].innerText.toLowerCase();
+        const localidad = row.cells[4].innerText.toLowerCase();
+
+        row.style.display =
+            (dni.includes(filter) || nombre.includes(filter) || apellido.includes(filter) || localidad.includes(filter))
+            ? '' : 'none';
+    });
+
+    if (filter === '') rows.forEach(row => row.style.display = '');
+});
+
+
+clearButton.addEventListener('click', function() {
+    searchInput.value = '';
+    rows.forEach(row => row.style.display = '');
+    searchInput.focus();
+});
+</script>
+{% endblock %}
+

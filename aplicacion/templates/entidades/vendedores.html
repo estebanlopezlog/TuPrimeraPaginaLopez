@@ -1,0 +1,89 @@
+{% extends 'entidades/base.html' %}
+
+{% block title %}Vendedores | Sistema de Gestión{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="display-5 fw-bold text-danger mb-3">🙍🏻‍♂️ Gestión de Vendedores</h1>
+    <p class="lead text-muted">
+        Administrá el equipo de ventas de tu organización. 
+        Podés agregar nuevos vendedores, editar datos personales o eliminar registros inactivos.
+    </p>
+    <hr>
+
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <a href="{% url 'nuevo_vendedor' %}" class="btn btn-success">➕ Crear nuevo vendedor</a>
+
+        <!-- Buscador dinámico -->
+        <div class="d-flex ms-3" style="max-width: 300px;">
+            <input type="text" id="searchInput" 
+                   class="form-control me-2" 
+                   placeholder="Buscar vendedor..." 
+                   autocomplete="off">
+            <button type="button" id="clearButton" class="btn btn-outline-secondary">✖</button>
+        </div>
+    </div>
+
+    {% if vendedores %}
+        <table class="table table-hover table-bordered align-middle mt-3" id="vendedorTable">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th class="text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for vendedor in vendedores %}
+                    <tr>
+                        <td>{{ vendedor.id_vendedor }}</td>
+                        <td>{{ vendedor.nombre_vendedor }}</td>
+                        <td>{{ vendedor.apellido_vendedor }}</td>
+                        <td class="text-center">
+                            <a href="{% url 'editar_vendedor' vendedor.id_vendedor %}" class="btn btn-sm btn-warning me-1">✏️ Editar</a>
+                            <a href="{% url 'eliminar_vendedor' vendedor.id_vendedor %}" class="btn btn-sm btn-danger"
+                               onclick="return confirm('¿Seguro que querés eliminar este vendedor?');">🗑️ Eliminar</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-info mt-4">No hay vendedores registrados todavía.</div>
+    {% endif %}
+</div>
+
+<!--  Filtro dinámico -->
+<script>
+const searchInput = document.getElementById('searchInput');
+const clearButton = document.getElementById('clearButton');
+const rows = document.querySelectorAll('#vendedorTable tbody tr');
+
+
+searchInput.addEventListener('input', function() {
+    const filter = this.value.toLowerCase().trim();
+
+    rows.forEach(row => {
+        const nombre = row.cells[1].innerText.toLowerCase();
+        const apellido = row.cells[2].innerText.toLowerCase();
+        row.style.display = (nombre.includes(filter) || apellido.includes(filter)) ? '' : 'none';
+    });
+
+    // Si el campo está vacío, mostrar todo
+    if (filter === '') {
+        rows.forEach(row => row.style.display = '');
+    }
+});
+
+
+clearButton.addEventListener('click', function() {
+    searchInput.value = '';
+    rows.forEach(row => row.style.display = '');
+    searchInput.focus();
+});
+</script>
+{% endblock %}
+
+

@@ -1,0 +1,116 @@
+{% extends 'entidades/base.html' %}
+
+{% block title %}Dashboard General | Sistema de Gestión{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="display-5 fw-bold text-primary mb-4 text-center">📊 Dashboard Logístico-Comercial</h1>
+
+    <!-- 🔍 Filtro de fechas -->
+    <form method="get" class="row g-3 justify-content-center mb-4">
+        <div class="col-md-3">
+            <label class="form-label fw-semibold">Desde</label>
+            <input type="date" name="fecha_inicio" value="{{ fecha_inicio }}" class="form-control">
+        </div>
+        <div class="col-md-3">
+            <label class="form-label fw-semibold">Hasta</label>
+            <input type="date" name="fecha_fin" value="{{ fecha_fin }}" class="form-control">
+        </div>
+        <div class="col-md-2 align-self-end">
+            <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+        </div>
+    </form>
+
+    <!-- Métricas principales -->
+    <div class="row text-center mb-4">
+        <div class="col-md-3">
+            <div class="card shadow-sm p-3">
+                <h6 class="text-muted">🧾 Ventas registradas</h6>
+                <h2 class="text-primary">{{ total_ventas }}</h2>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm p-3">
+                <h6 class="text-muted">💳 Total en Tarjeta</h6>
+                <h2 class="text-success">${{ total_tarjeta|floatformat:2 }}</h2>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm p-3">
+                <h6 class="text-muted">👥 Clientes nuevos</h6>
+                <h2 class="text-warning">{{ clientes_por_dia|length }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gráficos -->
+    <div class="row">
+        <div class="col-md-6">
+            <canvas id="clientesChart"></canvas>
+        </div>
+        <div class="col-md-6">
+            <canvas id="formasPagoChart"></canvas>
+        </div>
+    </div>
+
+    <hr class="my-4">
+
+    <h5 class="fw-bold mb-3 text-center">🏆 Top 5 Vendedores con más ventas</h5>
+    <table class="table table-hover table-bordered text-center">
+        <thead class="table-light">
+            <tr>
+                <th>Vendedor</th>
+                <th>Total Vendido ($)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for vendedor in top_vendedores %}
+            <tr>
+                <td>{{ vendedor.vendedor__nombre_vendedor }} {{ vendedor.vendedor__apellido_vendedor }}</td>
+                <td>${{ vendedor.total|floatformat:2 }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="2">Sin datos disponibles.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- 📈 Librería Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    // Clientes nuevos por día
+    const clientesData = {
+        labels: [{% for c in clientes_por_dia %}"{{ c.fecha_alta }}",{% endfor %}],
+        datasets: [{
+            label: 'Clientes nuevos por día',
+            data: [{% for c in clientes_por_dia %}{{ c.total }},{% endfor %}],
+            backgroundColor: 'rgba(54, 162, 235, 0.5)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1
+        }]
+    };
+
+    new Chart(document.getElementById('clientesChart'), {
+        type: 'bar',
+        data: clientesData
+    });
+
+    // Ventas por forma de pago
+    const pagoData = {
+        labels: [{% for v in ventas_por_pago %}"{{ v.forma_de_pago }}",{% endfor %}],
+        datasets: [{
+            label: 'Distribución de Ventas por Forma de Pago',
+            data: [{% for v in ventas_por_pago %}{{ v.total|default:0 }},{% endfor %}],
+            backgroundColor: ['#36A2EB', '#4BC0C0', '#FFCE56']
+        }]
+    };
+
+    new Chart(document.getElementById('formasPagoChart'), {
+        type: 'pie',
+        data: pagoData
+    });
+</script>
+
+{% endblock %}

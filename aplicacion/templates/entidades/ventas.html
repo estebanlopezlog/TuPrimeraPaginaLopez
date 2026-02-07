@@ -1,0 +1,105 @@
+{% extends 'entidades/base.html' %}
+
+{% block title %}Ventas | Sistema de Gestión{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="display-5 fw-bold text-success mb-3">📦 Registro de Ventas</h1>
+    <p class="lead text-muted">
+        En esta sección podés consultar las ventas registradas en el sistema. 
+        Cada registro muestra su cliente, vendedor, sucursal, fecha y forma de pago.
+    </p>
+    <hr>
+
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <a href="{% url 'crear_venta' %}" class="btn btn-success">➕ Generar nueva venta</a>
+
+        <!-- Buscador dinámico -->
+        <div class="d-flex ms-3" style="max-width: 350px;">
+            <input type="text" id="searchInput"
+                   class="form-control me-2"
+                   placeholder="Buscar venta..."
+                   autocomplete="off">
+            <button type="button" id="clearButton" class="btn btn-outline-secondary">✖</button>
+        </div>
+    </div>
+
+    {% if datos_ventas %}
+        <table class="table table-hover table-bordered align-middle mt-3" id="ventaTable">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Fecha</th>
+                    <th>Cliente</th>
+                    <th>Vendedor</th>
+                    <th>Sucursal</th>
+                    <th>Forma de pago</th>
+                    <th class="text-center">Cant. total</th>
+                    <th class="text-end">Total ($)</th>
+                    <th class="text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for dato in datos_ventas %}
+                    <tr>
+                        <td>{{ dato.venta.id_venta }}</td>
+                        <td>{{ dato.venta.fecha_hora_venta|date:"d/m/Y H:i" }}</td>
+                        <td>{{ dato.venta.cliente }}</td>
+                        <td>{{ dato.venta.vendedor }}</td>
+                        <td>{{ dato.venta.sucursal }}</td>
+                        <td>{{ dato.venta.forma_de_pago }}</td>
+                        <td class="text-center">{{ dato.cantidad_total }}</td>
+                        <td class="text-end fw-bold text-primary">{{ dato.total_venta|floatformat:2 }}</td>
+                        <td class="text-center">
+                            <a href="{% url 'editar_venta' dato.venta.id_venta %}" 
+                               class="btn btn-sm btn-warning me-1">✏️ Editar</a>
+                            <a href="{% url 'eliminar_venta' dato.venta.id_venta %}" 
+                               class="btn btn-sm btn-danger"
+                               onclick="return confirm('¿Seguro que querés eliminar esta venta?');">🗑️ Eliminar</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-info mt-4" role="alert">
+            <strong>ℹ️ No hay ventas registradas todavía.</strong>  
+            Probá creando una nueva venta para comenzar a registrar movimientos.
+        </div>
+    {% endif %}
+</div>
+
+<!--  Filtro dinámico -->
+<script>
+const searchInput = document.getElementById('searchInput');
+const clearButton = document.getElementById('clearButton');
+const rows = document.querySelectorAll('#ventaTable tbody tr');
+
+
+searchInput.addEventListener('input', function() {
+    const filter = this.value.toLowerCase().trim();
+
+    rows.forEach(row => {
+        const cliente = row.cells[2].innerText.toLowerCase();
+        const vendedor = row.cells[3].innerText.toLowerCase();
+        const sucursal = row.cells[4].innerText.toLowerCase();
+        const pago = row.cells[5].innerText.toLowerCase();
+
+        row.style.display =
+            (cliente.includes(filter) || vendedor.includes(filter) || sucursal.includes(filter) || pago.includes(filter))
+            ? '' : 'none';
+    });
+
+    if (filter === '') rows.forEach(row => row.style.display = '');
+});
+
+
+clearButton.addEventListener('click', function() {
+    searchInput.value = '';
+    rows.forEach(row => row.style.display = '');
+    searchInput.focus();
+});
+</script>
+{% endblock %}
+

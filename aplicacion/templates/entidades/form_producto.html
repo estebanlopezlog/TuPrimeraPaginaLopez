@@ -1,0 +1,14 @@
+{% extends 'entidades/base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-primary">Registrar Nuevo Producto</h2>
+    <p>Complete los campos para agregar un nuevo producto al sistema.</p>
+
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success mt-3">Guardar Producto</button>
+        <a href="{% url 'productos' %}" class="btn btn-secondary mt-3">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

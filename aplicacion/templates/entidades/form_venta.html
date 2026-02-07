@@ -1,0 +1,54 @@
+{% extends 'entidades/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-primary mb-3">{{ titulo }}</h2>
+    <p>Seleccione el cliente, producto, vendedor y complete los datos de la venta.</p>
+
+    <form method="POST" novalidate>
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label>Vendedor:</label>
+            {{ form.vendedor }}
+        </div>
+
+        <div class="mb-3">
+            <label>Cliente:</label>
+            {{ form.cliente }}
+        </div>
+
+        <div class="mb-3">
+            <label>Sucursal:</label>
+            {{ form.sucursal }}
+        </div>
+        <div class="mb-3">
+            <label>Forma de pago:</label>
+            {{ form.forma_de_pago }}
+        </div>
+        <hr>
+        <h5>Productos y cantidades</h5>
+        {{ formset.management_form }}
+        {% for subform in formset %}
+        <div class="border rounded p-3 mb-2 bg-light">
+            {{ subform.as_p }}
+        </div>
+        {% endfor %}
+        <hr>
+
+
+
+        <button type="submit" class="btn btn-success">💾 Guardar Venta</button>
+        <a href="{% url 'ventas' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+
+<!-- Estilos y scripts de Select2 -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('select').select2({ width: '100%' });
+    });
+</script>
+{% endblock %}

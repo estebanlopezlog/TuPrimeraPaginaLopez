@@ -1,0 +1,60 @@
+{% extends 'entidades/base.html' %}
+{% block title %}Editar Perfil{% endblock %}
+
+{% block content %}
+<div class="container mt-4" style="max-width: 500px;">
+    <div class="card shadow p-4 border-0" style="border-radius: 1rem;">
+        <h4 class="text-primary fw-bold mb-4">👔 Editar Perfil</h4>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Nombre de usuario</label>
+                <input type="text" name="username" class="form-control" value="{{ user.username }}" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Nombre</label>
+                <input type="text" name="first_name" class="form-control" value="{{ user.first_name }}">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Apellido</label>
+                <input type="text" name="last_name" class="form-control" value="{{ user.last_name }}">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Correo electrónico</label>
+                <input type="email" name="email" class="form-control" value="{{ user.email }}">
+            </div>
+
+            <div class="mb-3 text-center">
+                <label class="form-label fw-semibold">Foto de perfil</label><br>
+                <img src="{{ user.userprofile.profile_picture.url }}" 
+                     alt="Foto de perfil" 
+                     class="rounded-circle mb-3"
+                     style="width: 100px; height: 100px; object-fit: cover; border: 2px solid #ddd;">
+                <input type="file" name="profile_picture" class="form-control mt-2">
+            </div>
+
+            <!--BOTÓN CAMBIAR CONTRASEÑA -->
+            <div class="d-grid mb-3">
+                <a href="{% url 'password_change' %}" class="btn btn-warning fw-semibold">
+                    🔑 Cambiar contraseña
+                </a>
+            </div>
+
+            <!--BOTÓN GUARDAR CAMBIOS -->
+            <div class="d-grid mb-2">
+                <button type="submit" class="btn btn-success">Guardar cambios</button>
+            </div>
+
+            <div class="d-grid">
+                <a href="{% url 'index' %}" class="btn btn-outline-secondary">Volver</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
